@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<link rel="stylesheet" href="/styles/main.css">
+
+    <meta name="generator" content="Hexo 4.2.0"></head>
+    <body>
+        <div class="container">
+            <header>
+<div class="main">
+<div class="title">
+    <a href="#" class="logo">LuckyDog&#39;s Blog</a>
+</div>
+<div class="site-nav">
+    <ul id="menu" class="menu">
+    
+        <li class="menu-item text-underline">
+            <a href="/">Home</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/archives">Archives</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/about/">About</a>
+        </li>
+            
+    </ul>
+</div>
+</div>
+</header>
+            <main class="main">
+                <section class="posts clearfix">
+<div class="post-wrapper">
+    <article class="post article-entry">
+    <div class="post-title">
+        Reids：第一篇了解NOSQL
+    </div>
+    <p class="sub">2月 21 2020</p>
+    <div class="post-content">
+        <h2 id="一-传统mysql的发展"><a href="#一-传统mysql的发展" class="headerlink" title="一 传统mysql的发展"></a>一 传统mysql的发展</h2><p>1. 单机mysql(一台服务器实现增删改查)<br>2. Memcached（缓存）+mysql+垂直拆分<br><img src="/images/firstredis/one.png" alt="one"><br>3. Mysql主从读写分离(主数据库写一条记录，从数据库也跟着写；主库负责写，从库负责读)<br><img src="/images/firstredis/two.png" alt="one"><br>4. 分表分库+水平拆分+mysql集群（频繁的数据放在库上，不活跃的数据放在其他库上；数据量大的表分布在不同库上）</p>
+<ul>
+<li><p>mysql引擎：MyISAN与InnoDB</p>
+</li>
+<li><p>MyISAN锁表，InnoDB锁行<br><img src="/images/firstredis/three.png" alt="one"><br>5. blob、clob(大的视频、图片、文件不放入数据库)<br>6. 整体架构<br><img src="/images/firstredis/four.png" alt="one"></p>
+<h2 id="二-产生背景3V-3高"><a href="#二-产生背景3V-3高" class="headerlink" title="二 产生背景3V+3高"></a>二 产生背景3V+3高</h2><p><img src="/images/firstredis/3v3g.png" alt="3v3g"></p>
+<h2 id="三-NoSQL"><a href="#三-NoSQL" class="headerlink" title="三 NoSQL"></a>三 NoSQL</h2><h3 id="一-是什么"><a href="#一-是什么" class="headerlink" title="(一) 是什么"></a>(一) 是什么</h3><p>not only sql 意思是不仅仅是SQL，泛指非关系型数据库。这些类型的数据不需要固定的模式，无需多余操作就可以横向扩展。</p>
+<h3 id="二-能干什么"><a href="#二-能干什么" class="headerlink" title="(二) 能干什么"></a>(二) 能干什么</h3><p>1. 易扩展：数据之间无关系，非常易扩展，也无形之间在架构的层面上带来了可扩展能力。<br>2. 大数据量高性能：有非常高的读写性能，尤其在大数据量下，同样表现优秀。（Redis读11w/s 写8w/s）<br>3. 多样灵活的数据模型：无需时间为要存储的数据建立字段，随时可以定义存储自定的数据格式。<br>4. 传统的RDBMS vs NoSQL<br><img src="/images/firstredis/rdbms.png" alt="RDBMS">  <img src="/images/firstredis/nosql.png" alt="NoSql"></p>
+<h3 id="三-常见"><a href="#三-常见" class="headerlink" title="(三)常见"></a>(三)常见</h3><p>1. Memcache：基本上很少人用了。<br>2. <strong>Redis</strong>：覆盖memcache的所有的功能，基本上替代了memcache，可以快速的存取数据，所有的数据都是在内存当中，存放数据量的大小，取决于内存大小。<br>3. MongoDB：nosql数据库，数据主要是存储在内存当中，如果内存不够，数据可以落地到磁盘里面去，而且MongoDB支持sql语句的查询，是最像关系型数据库的非关系型数据库。<br>4. Hbase：列式数据库存储，可以有上亿条数据，可以有上百万列等等都可以做到轻松的数据的查询，是大数据领域里面一个非常重要的非关系型数据库，原型是2006年Google发表BigTable论文。</p>
+<h3 id="四-BSON"><a href="#四-BSON" class="headerlink" title="(四) BSON"></a>(四) BSON</h3><p>Binary json 是一种类json的二进制形式的存储格式。</p>
+<h3 id="五）聚合模型"><a href="#五）聚合模型" class="headerlink" title="(五）聚合模型"></a>(五）聚合模型</h3><p>1. KV键值对，key-value<br>2. 列族：按照列存储数据的，最大的特点是方便存储结构化和半结构化数据，方便数据的压缩，对针对某一列或者几列的查询有非常大的IO优势</p>
+<pre><code>![list](/images/firstredis/list.png)</code></pre><p>3. 图形</p>
+<pre><code>![shape](/images/firstredis/shape.png)</code></pre><h3 id="六-四大分类"><a href="#六-四大分类" class="headerlink" title="(六)四大分类"></a>(六)四大分类</h3><p>1. kv键值对</p>
+<ul>
+<li>新浪：BerkeleyDB+redis</li>
+<li>美团：redis+tair</li>
+<li>阿里：memcatche+redis  </li>
+</ul>
+<p>2. 文档型数据库</p>
+<ul>
+<li>CouchDB</li>
+<li>MongoDb:基于分布式文件存储的数据库。介于关系型数据库和非关系数据库之间，是nosql中功能最丰富的，类似关系型数据库。  </li>
+</ul>
+<p>3. 列序存储数据库</p>
+<ul>
+<li>Cassandra</li>
+<li>HBbase  </li>
+</ul>
+<p>4. 图形关系数据</p>
+<ul>
+<li>Neo4J</li>
+<li>InfoGrid  </li>
+</ul>
+<p>5. 四者对比<br>  <img src="/images/firstredis/fourdatabase.png" alt="fourdatabse"></p>
+<h3 id="七-在分布式数据库中CAP原理CAP-BASE"><a href="#七-在分布式数据库中CAP原理CAP-BASE" class="headerlink" title="(七).在分布式数据库中CAP原理CAP+BASE"></a>(七).在分布式数据库中CAP原理CAP+BASE</h3><p>1. CAP </p>
+<ul>
+<li>C:Consistency （强一致性）</li>
+<li>A:Availability （可用性）</li>
+<li>P:partition tolerance （分区容错性）  </li>
+</ul>
+<p>2. CAP的3进2 //CAP只能满足两个（分区容错性是我们必须需要实现的。）</p>
+<ol>
+<li>理论核心：一个分布式系统不可能同时很好的满足一致性，可用性和分区容错性这三个需求，最多同时满足两个。</li>
+<li>根据CAP原理将NOSQL数据库分成了满足CA原则、满足CP原则、和满足Ap原则的三大类。</li>
+</ol>
+<ul>
+<li>①CA单点集群，满足一致性，可用性的系统，通常在可扩展性上不太强，传统的ORACLE数据库</li>
+<li>②CP满足一致性，分区容错性的系统，通常性能并不是特别高，大多数网站架构的选择。</li>
+<li>③AP满足可用性，分区容错性，通常可能对一致性要求低一些，Redis、MongoBD。</li>
+<li>④数据库事务一致性需求,很多web实时系统并不要求严格的数据库事务，对读一致性的要求很低， 有些场合对写一致性要求并不高。允许实现最终一致性。</li>
+<li>⑤数据库的写实时性和读实时性需求,对关系数据库来说，插入一条数据之后立刻查询，是肯定可以读出来这条数据的，但是对于很多web应用来说，并不要求这么高的实时性，比方说发一条消息之 后，过几秒乃至十几秒之后，我的订阅者才看到这条动态是完全可以接受的。</li>
+<li>⑥对复杂的SQL查询，特别是多表关联查询的需求,任何大数据量的web系统，都非常忌讳多个大表的关联查询，以及复杂的数据分析类型的报表查询，特别是SNS类型的网站，从需求以及产品设计角 度，就避免了这种情况的产生。往往更多的只是单表的主键查询，以及单表的简单条件分页查询，SQL的功能被极大的弱化了。  </li>
+</ul>
+<p>3. BASE:通过让系统放松对某一时刻的数据的一致性的要求来换取整体的伸缩性和性能上的改观，缘由就在于大型系统往往由于地域分布和极高的性能要求，不可能采用分布式事务来完成这些指标，要想获得这些指标，我们必须采用另外一种方式来完成，这里的BASE就是解决这个问题的办法。</p>
+<ul>
+<li>基本可用(Basically Available)</li>
+<li>软状态（Soft state）</li>
+<li>最终一致性(Eventually consistent)  </li>
+</ul>
+<p>4. 分布式+集群简介</p>
+<ul>
+<li>分布式：不同的多台服务器上面部署不同的服务模块（工程），他们之间通过Rpc/Rmi之间通信和调用，对外提供服务和组内协作。</li>
+<li>集群：不同的多台服务器上面部署相同的服务模块，通过分布式调度软件进行统一的调度，对外提供服务和访问</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+    </article>
+</div>
+
+    <div class="_toc">
+        <strong class="toc-title">
+        Contents
+        </strong>
+        <div class="toc-content">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-传统mysql的发展"><span class="toc-text">一 传统mysql的发展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-产生背景3V-3高"><span class="toc-text">二 产生背景3V+3高</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-NoSQL"><span class="toc-text">三 NoSQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一-是什么"><span class="toc-text">(一) 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二-能干什么"><span class="toc-text">(二) 能干什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三-常见"><span class="toc-text">(三)常见</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四-BSON"><span class="toc-text">(四) BSON</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五）聚合模型"><span class="toc-text">(五）聚合模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六-四大分类"><span class="toc-text">(六)四大分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#七-在分布式数据库中CAP原理CAP-BASE"><span class="toc-text">(七).在分布式数据库中CAP原理CAP+BASE</span></a></li></ol></li></ol>
+        </div>
+    </div>
+
+</section>
+
+
+    <nav class="post-nav">
+        
+            <div class="page-tags">
+                
+                    <a href="/tags/redis/">redis</a>
+                
+            </div>
+        
+    </nav>
+
+
+
+    <nav class="paginator clearfix">
+        
+            <a class="prev" href="/2020/02/21/secondarticalofredis/">
+                <i class="iconfont icon-left"></i>
+                <span class="prev-text">Redis：第二篇应用Redis</span>
+            </a>
+        
+        
+    </nav>
+
+
+            </main>
+            <div class="copyright">
+  <div class="text">Powered By
+    <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> | Theme <a href="https://github.com/zjx137/hexo-theme-Tsu" target="_blank" rel="noopener">Tsu</a> &copy 2019
+  </div>
+</div>
+
+        </div>
+    <div class="back-to-top" id="back-to-top">
+            <i class="iconfont icon-up"></i>
+    </div>
+        
+    </body>
+    
+<script src="/js/jquery-3.3.1.min.js"></script>
+
+    
+<script src="/js/back-to-top.js"></script>
+
+    
+<script src="/js/scroll.js"></script>
+
+    <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": { 
+        preferredFont: "TeX", 
+        availableFonts: ["STIX","TeX"], 
+        linebreaks: { automatic:true }, 
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) 
+    },
+    tex2jax: { 
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ], 
+        processEscapes: true, 
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {  
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, 
+        Macros: { href: "{}" } 
+    },
+    messageStyle: "none"
+    }); 
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+</html>
