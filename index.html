@@ -64,9 +64,8 @@
 <h3 id="二-能干什么"><a href="#二-能干什么" class="headerlink" title="(二) 能干什么"></a>(二) 能干什么</h3><p>1. 易扩展：数据之间无关系，非常易扩展，也无形之间在架构的层面上带来了可扩展能力。<br>2. 大数据量高性能：有非常高的读写性能，尤其在大数据量下，同样表现优秀。（Redis读11w/s 写8w/s）<br>3. 多样灵活的数据模型：无需时间为要存储的数据建立字段，随时可以定义存储自定的数据格式。<br>4. 传统的RDBMS vs NoSQL<br><img src="/images/firstredis/rdbms.png" alt="RDBMS">  <img src="/images/firstredis/nosql.png" alt="NoSql"></p>
 <h3 id="三-常见"><a href="#三-常见" class="headerlink" title="(三)常见"></a>(三)常见</h3><p>1. Memcache：基本上很少人用了。<br>2. <strong>Redis</strong>：覆盖memcache的所有的功能，基本上替代了memcache，可以快速的存取数据，所有的数据都是在内存当中，存放数据量的大小，取决于内存大小。<br>3. MongoDB：nosql数据库，数据主要是存储在内存当中，如果内存不够，数据可以落地到磁盘里面去，而且MongoDB支持sql语句的查询，是最像关系型数据库的非关系型数据库。<br>4. Hbase：列式数据库存储，可以有上亿条数据，可以有上百万列等等都可以做到轻松的数据的查询，是大数据领域里面一个非常重要的非关系型数据库，原型是2006年Google发表BigTable论文。</p>
 <h3 id="四-BSON"><a href="#四-BSON" class="headerlink" title="(四) BSON"></a>(四) BSON</h3><p>Binary json 是一种类json的二进制形式的存储格式。</p>
-<h3 id="五）聚合模型"><a href="#五）聚合模型" class="headerlink" title="(五）聚合模型"></a>(五）聚合模型</h3><p>1. KV键值对，key-value<br>2. 列族：按照列存储数据的，最大的特点是方便存储结构化和半结构化数据，方便数据的压缩，对针对某一列或者几列的查询有非常大的IO优势</p>
-<pre><code>![list](/images/firstredis/list.png)</code></pre><p>3. 图形</p>
-<pre><code>![shape](/images/firstredis/shape.png)</code></pre><h3 id="六-四大分类"><a href="#六-四大分类" class="headerlink" title="(六)四大分类"></a>(六)四大分类</h3><p>1. kv键值对</p>
+<h3 id="五）聚合模型"><a href="#五）聚合模型" class="headerlink" title="(五）聚合模型"></a>(五）聚合模型</h3><p>1. KV键值对，key-value<br>2. 列族：按照列存储数据的，最大的特点是方便存储结构化和半结构化数据，方便数据的压缩，对针对某一列或者几列的查询有非常大的IO优势<br>  <img src="/images/firstredis/list.png" alt="list"><br>3. 图形<br>  <img src="/images/firstredis/shape.png" alt="shape"></p>
+<h3 id="六-四大分类"><a href="#六-四大分类" class="headerlink" title="(六)四大分类"></a>(六)四大分类</h3><p>1. kv键值对</p>
 <ul>
 <li>新浪：BerkeleyDB+redis</li>
 <li>美团：redis+tair</li>
