@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+<link rel="stylesheet" href="/styles/main.css">
+
+    <meta name="generator" content="Hexo 4.2.0"></head>
+    <body>
+        <div class="container">
+            <header>
+<div class="main">
+<div class="title">
+    <a href="#" class="logo">LuckyDog&#39;s Blog</a>
+</div>
+<div class="site-nav">
+    <ul id="menu" class="menu">
+    
+        <li class="menu-item text-underline">
+            <a href="/">Home</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/archives">Archives</a>
+        </li>
+    
+        <li class="menu-item text-underline">
+            <a href="/about/">About</a>
+        </li>
+            
+    </ul>
+</div>
+</div>
+</header>
+            <main class="main">
+                <section class="posts clearfix">
+<div class="post-wrapper">
+    <article class="post article-entry">
+    <div class="post-title">
+        Redis学习脑图：进阶篇
+    </div>
+    <p class="sub">3月 08 2020</p>
+    <div class="post-content">
+        <h1 id="一-脑图"><a href="#一-脑图" class="headerlink" title="一 脑图"></a>一 脑图</h1><p><img src="/images/mindmapofredis/mindmap2.jpg" alt="进阶"><br>ps:图片建议保存食用</p>
+<hr>
+<h1 id="二-随便写点"><a href="#二-随便写点" class="headerlink" title="二 随便写点"></a>二 随便写点</h1><h2 id="一-重点"><a href="#一-重点" class="headerlink" title="(一) 重点"></a>(一) 重点</h2><ul>
+<li>一致性哈希算法</li>
+<li>分区 <a href="http://www.redis.cn/topics/partitioning.html" target="_blank" rel="noopener">http://www.redis.cn/topics/partitioning.html</a></li>
+<li>分布式锁 <a href="http://www.redis.cn/topics/distlock.html" target="_blank" rel="noopener">http://www.redis.cn/topics/distlock.html</a></li>
+<li>穿透</li>
+<li>雪崩</li>
+<li>击穿</li>
+</ul>
+<h2 id="二-主从复制"><a href="#二-主从复制" class="headerlink" title="(二) 主从复制"></a>(二) 主从复制</h2><ul>
+<li>建立主从关系<br><code>REPLICAOF host port</code></li>
+<li>主库往从库同步数据的方式：Rdb+预留缓冲区</li>
+</ul>
+<h2 id="三-哨兵模式"><a href="#三-哨兵模式" class="headerlink" title="(三) 哨兵模式"></a>(三) 哨兵模式</h2><ul>
+<li>sentinel <a href="http://www.redis.cn/topics/sentinel.html" target="_blank" rel="noopener">http://www.redis.cn/topics/sentinel.html</a></li>
+</ul>
+<h2 id="四-集群搭建"><a href="#四-集群搭建" class="headerlink" title="(四) 集群搭建"></a>(四) 集群搭建</h2><h3 id="1-Twemproxy"><a href="#1-Twemproxy" class="headerlink" title="1 Twemproxy"></a>1 Twemproxy</h3><ul>
+<li>官方git：<a href="https://github.com/twitter/twemproxy" target="_blank" rel="noopener">https://github.com/twitter/twemproxy</a></li>
+</ul>
+<ol>
+<li>yum automake和libtool，如果有就不需要了<br><code># yum install automake  libtool</code> </li>
+<li>进入到你要存放的目录，从git获取源码,如果没有git，执行yum install git<br><code># git clone git@github.com:twitter/twemproxy.git</code></li>
+<li>进入下载下的目录<br><code># cd twemproxy</code></li>
+<li>执行命令<br><code># autoreconf -fvi</code></li>
+<li>这里会有问题，原因是autoreconf版本太低了，如图<br><img src="/images/mindmapofredis/autoconfErro.PNG" alt="问题"></li>
+<li>搜索autoreconf268,如果有直接yum install就好，没有需要更换下仓库，步骤参考下章节<br><code># yum search autoreconf268</code><br><code># yum install autoreconf268</code></li>
+<li>执行命令<br><code># autoreconf268 -fvi</code><br><code># ./configure</code></li>
+<li>编译,在src目录下会生成一个nutcracker可执行程序<br><code># make</code></li>
+<li>进入scripts目录，拷贝nutcracker.init到/etc/init.d/twemproxy<br><code># cp nutcracker.init /etc/init.d/twemproxy</code></li>
+<li>进入/etc/init.d，更改twemproxy权限<br><code># cd /etc/init.d</code><br><code># chmod +x twemproxy</code></li>
+<li>新建目录,配置文件中有一段代码：OPTINONS=”etc/nutcracker/utcracker.yml”<br><code># mkdir /etc/nutcracker</code></li>
+<li>将安装目录下conf文件下的内容复制到我们建好的文件下<br><code># cp /opt/twemproxy/twemproxy/conf/* /etc/nutcracker/</code> </li>
+<li>拷贝src下的可执行程序到usr的bin目录下，以便于在任何位置都可以使用<br><code># cp /opt/twemproxy/twemproxy/src/nutcracker /usr/bin</code></li>
+<li>进入我们上面建好的存放配置文件的地方，注意在修改之前最好做一份备份<br><code># cd /etc/nutcracker/</code><br><code># cp nutcracker.yml nutcracker.yml.bak</code></li>
+<li>修改<br><code># vi nutcracker.yum</code><br>ex:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">alpa:</span><br><span class="line">     # twemproxy的地址端口,可通过redis-cli -p 22121访问到集群</span><br><span class="line">  listen: 127.0.0.1:22121  </span><br><span class="line">  hash: fnv1a_64            </span><br><span class="line">  distribution: ketama</span><br><span class="line">  auto_eject_hosts: true</span><br><span class="line">     # 代理的是否是redis，选true,false时memcache</span><br><span class="line">  redis: true                  </span><br><span class="line">  server_retry_timeout: 2000</span><br><span class="line">  server_failure_limit: 1</span><br><span class="line">     # 所代理的节点</span><br><span class="line">  servers:</span><br><span class="line">       - 127.0.0.1:6379:1</span><br><span class="line">       - 127.0.0.1:6380:1</span><br></pre></td></tr></table></figure></li>
+<li>启动redis实例不多说了，启动twemproxy<br><code># service twemproxy start</code></li>
+<li>redis客户端通过代理端口连接<br><code># redis-cli  -p 22121</code></li>
+</ol>
+<h2 id="2-Predixy，国内大佬的作品，牛的雅痞"><a href="#2-Predixy，国内大佬的作品，牛的雅痞" class="headerlink" title="2 Predixy，国内大佬的作品，牛的雅痞"></a>2 Predixy，国内大佬的作品，牛的雅痞</h2><ul>
+<li>官方git：<a href="https://github.com/joyieldInc/predixy" target="_blank" rel="noopener">https://github.com/joyieldInc/predixy</a></li>
+<li>作者的博客：<a href="https://blog.csdn.net/rebaic/article/details/76384028" target="_blank" rel="noopener">https://blog.csdn.net/rebaic/article/details/76384028</a></li>
+<li>过程以后有时间或想写的时候再写吧</li>
+</ul>
+<h2 id="3-Redis-cluster"><a href="#3-Redis-cluster" class="headerlink" title="3 Redis cluster"></a>3 Redis cluster</h2><ul>
+<li>官网：<a href="http://www.redis.cn/topics/cluster-tutorial.html" target="_blank" rel="noopener">http://www.redis.cn/topics/cluster-tutorial.html</a></li>
+<li>同上</li>
+</ul>
+<h2 id="4-仓库修改"><a href="#4-仓库修改" class="headerlink" title="4 仓库修改"></a>4 仓库修改</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># cd &#x2F;etc&#x2F;yum.repos.d&#x2F;</span><br><span class="line"># wget -O &#x2F;etc&#x2F;yum.repos.d&#x2F;epel.repo http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;repo&#x2F;epel-6.repo</span><br><span class="line"># yum clean all</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+    </article>
+</div>
+
+    <div class="_toc">
+        <strong class="toc-title">
+        Contents
+        </strong>
+        <div class="toc-content">
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一-脑图"><span class="toc-text">一 脑图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二-随便写点"><span class="toc-text">二 随便写点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-重点"><span class="toc-text">(一) 重点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-主从复制"><span class="toc-text">(二) 主从复制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-哨兵模式"><span class="toc-text">(三) 哨兵模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-集群搭建"><span class="toc-text">(四) 集群搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Twemproxy"><span class="toc-text">1 Twemproxy</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Predixy，国内大佬的作品，牛的雅痞"><span class="toc-text">2 Predixy，国内大佬的作品，牛的雅痞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Redis-cluster"><span class="toc-text">3 Redis cluster</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-仓库修改"><span class="toc-text">4 仓库修改</span></a></li></ol></li></ol>
+        </div>
+    </div>
+
+</section>
+
+
+    <nav class="post-nav">
+        
+            <div class="page-tags">
+                
+                    <a href="/tags/redis/">redis</a>
+                
+            </div>
+        
+    </nav>
+
+
+
+    <nav class="paginator clearfix">
+        
+        
+            <a class="next" href="/2020/03/08/MindMapOfRedisFoundation/">
+                
+                <span class="prev-text">Redi学习脑图：基础篇</span>
+                <i class="iconfont icon-right"></i>
+            </a>
+        
+    </nav>
+
+
+            </main>
+            <div class="copyright">
+  <div class="text">Powered By
+    <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> | Theme <a href="https://github.com/zjx137/hexo-theme-Tsu" target="_blank" rel="noopener">Tsu</a> &copy 2019
+  </div>
+</div>
+
+        </div>
+    <div class="back-to-top" id="back-to-top">
+            <i class="iconfont icon-up"></i>
+    </div>
+        
+    </body>
+    
+<script src="/js/jquery-3.3.1.min.js"></script>
+
+    
+<script src="/js/back-to-top.js"></script>
+
+    
+<script src="/js/scroll.js"></script>
+
+    <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": { 
+        preferredFont: "TeX", 
+        availableFonts: ["STIX","TeX"], 
+        linebreaks: { automatic:true }, 
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50) 
+    },
+    tex2jax: { 
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ], 
+        processEscapes: true, 
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {  
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } }, 
+        Macros: { href: "{}" } 
+    },
+    messageStyle: "none"
+    }); 
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+</html>
